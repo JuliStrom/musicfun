@@ -9,15 +9,22 @@ import type {PlaylistData, UpdatePlaylistArgs} from "@/features/playlists/api/pl
 import {useState} from "react";
 import {PlaylistItem} from "@/features/playlists/ui/PlaylistsPage/PlaylistItem/PlaylistItem.tsx";
 import {EditPlaylistForm} from "@/features/playlists/ui/PlaylistsPage/EditPlaylistForm/EditPlaylistForm.tsx";
+import {useDebounceValue} from "@/common/hooks/useDebounceValue.ts";
 
 
 export const PlaylistsPage = () => {
 
+    const [search, setSearch] = useState('')
     const [playlistId, setPlaylistId] = useState<string | null>(null)
+
+
     const {register, handleSubmit, reset} = useForm<UpdatePlaylistArgs>()
-    const {data} = useFetchPlaylistsQuery()
+
+    const debounceSearch = useDebounceValue(search)
+    const {data, isLoading} = useFetchPlaylistsQuery({search:debounceSearch})
     const [deletePlaylist] = useDeletePlaylistMutation()
 
+    console.log({search})
     const deletePlaylistHandler = (playlistId: string) => {
         if (confirm(`Are you sure you want to delete playlist?`)) {
             deletePlaylist(playlistId)
@@ -43,7 +50,13 @@ export const PlaylistsPage = () => {
         <div className={s.container}>
             <h1>Playlists page</h1>
             <CreatePlaylistForm/>
+            <input
+                type='search'
+                placeholder='Search playlist by title'
+                onChange={(e) => setSearch(e.currentTarget.value)}
+            />
             <div className={s.items}>
+                {!data?.data.length && !isLoading && <h2>Playlists not found</h2>}
                 {data?.data.map(playlist => {
                     const isEditing = playlist.id === playlistId
                     return (
