@@ -10,18 +10,19 @@ import {useState} from "react";
 import {PlaylistItem} from "@/features/playlists/ui/PlaylistsPage/PlaylistItem/PlaylistItem.tsx";
 import {EditPlaylistForm} from "@/features/playlists/ui/PlaylistsPage/EditPlaylistForm/EditPlaylistForm.tsx";
 import {useDebounceValue} from "@/common/hooks/useDebounceValue.ts";
+import {Pagination} from "@/common/components/Pagination/Pagination.tsx";
 
 
 export const PlaylistsPage = () => {
 
     const [search, setSearch] = useState('')
     const [playlistId, setPlaylistId] = useState<string | null>(null)
-
+    const [currentPage, setCurrentPage] = useState(1)
 
     const {register, handleSubmit, reset} = useForm<UpdatePlaylistArgs>()
 
     const debounceSearch = useDebounceValue(search)
-    const {data, isLoading} = useFetchPlaylistsQuery({search:debounceSearch})
+    const {data, isLoading} = useFetchPlaylistsQuery({search:debounceSearch, pageNumber: currentPage, pageSize: 5})
     const [deletePlaylist] = useDeletePlaylistMutation()
 
     console.log({search})
@@ -77,6 +78,11 @@ export const PlaylistsPage = () => {
                     )
                 })}
             </div>
+            <Pagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                pagesCount={data?.meta.pagesCount || 1}
+            />
         </div>
     )
 }
