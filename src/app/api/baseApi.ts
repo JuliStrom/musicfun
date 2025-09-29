@@ -13,5 +13,8 @@ export const baseApi = createApi({
             return headers
         },
     }),
+    //keepUnusedDataFor: 50000,
+    //refetchOnFocus: true,
+    refetchOnReconnect: true,
     endpoints: () => ({})
 })
