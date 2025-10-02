@@ -16,11 +16,27 @@ export const PlaylistsPage = () => {
 
 
     const debounceSearch = useDebounceValue(search)
-    const {data, isLoading, isFetching} = useFetchPlaylistsQuery({search: debounceSearch, pageNumber: currentPage, pageSize})
+    const {data, isLoading} = useFetchPlaylistsQuery({
+        search: debounceSearch,
+        pageNumber: currentPage,
+        pageSize
+    })
     // {refetchOnFocus: true} добавляется вторым параметром в хук
     //refetchOnReconnect: true, также можно точечно вставить в хук
     //{pollingInterval: 3000, skipPollingIfUnfocused: true} также добавляется вторым параметром для получения всегда актуальных данных
-    console.log({isLoading, isFetching})
+
+    // if (error) {
+    //     if('status' in error){
+    //         const errMsg = 'error' in error ? error.error : (error.data as {error: string}).error ||
+    //             (error.data as {message:string}).message || "Some error occurred"
+    //         toast(errMsg, {type: 'error', theme: 'colored'})
+    //     } else {
+    //         const errMsg = error.message || "Some error occurred"
+    //         toast(errMsg, {type: 'error', theme: 'colored'})
+    //     }
+    //
+    // }
+
     const changePageSizeHandler = (size: number) => {
         setPageSize(size)
         setCurrentPage(1)
