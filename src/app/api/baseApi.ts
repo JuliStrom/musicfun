@@ -21,7 +21,6 @@ export const baseApi = createApi({
         if (result.error) {
             handleErrors(result.error)
         }
-
         return result
     },
     // baseQuery: fetchBaseQuery({

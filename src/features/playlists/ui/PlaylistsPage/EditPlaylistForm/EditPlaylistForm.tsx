@@ -15,9 +15,11 @@ export const EditPlaylistForm = ({playlistId, setPlaylistId, editPlaylist, regis
     const [updatePlaylist] = useUpdatePlaylistMutation()
     const onSubmit: SubmitHandler<UpdatePlaylistArgs> = data => {
         if (!playlistId) return //если id null то возвратом все прерывается
-        updatePlaylist({ playlistId, body: data }).then(() => {
-            setPlaylistId(null)
-        })
+        updatePlaylist({ playlistId, body: data })
+        //     .then(() => {
+        //     setPlaylistId(null)
+        // }) //we add optimistic update
+        setPlaylistId(null)
     }
 
 
