@@ -16,11 +16,11 @@ export const PlaylistsPage = () => {
 
 
     const debounceSearch = useDebounceValue(search)
-    const {data, isLoading} = useFetchPlaylistsQuery({search: debounceSearch, pageNumber: currentPage, pageSize})
+    const {data, isLoading, isFetching} = useFetchPlaylistsQuery({search: debounceSearch, pageNumber: currentPage, pageSize})
     // {refetchOnFocus: true} добавляется вторым параметром в хук
     //refetchOnReconnect: true, также можно точечно вставить в хук
     //{pollingInterval: 3000, skipPollingIfUnfocused: true} также добавляется вторым параметром для получения всегда актуальных данных
-
+    console.log({isLoading, isFetching})
     const changePageSizeHandler = (size: number) => {
         setPageSize(size)
         setCurrentPage(1)
@@ -31,9 +31,11 @@ export const PlaylistsPage = () => {
         setCurrentPage(1)
     }
 
+    if (isLoading) return <h1>Skeleton loader....</h1>
     return (
         <div className={s.container}>
             <h1>Playlists page</h1>
+            {/*{isFetching && <LinearProgress/>}*/}
             <CreatePlaylistForm/>
             <input
                 type='search'
@@ -41,6 +43,7 @@ export const PlaylistsPage = () => {
                 onChange={(e) => searchPlaylistHandler(e)}
             />
             <PlaylistsList playlists={data?.data || []} isPlaylistsLoading={isLoading}/>
+
             <Pagination
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
